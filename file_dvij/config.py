@@ -1,21 +1,19 @@
 # Імпортуємо бібліотеку для роботи з конфігураційними файлами
 import configparser
-# Імпортуємо бібліотеку для роботи з ОС
+# Імпортуємо бібліотеку для роботи з операційною системою
 import os
 
-#для роботи с одной  переменой
-
-
+# Задаємо шлях до конфігураційного файлу
 config_file = 'config.ini'
 config_parser = configparser.ConfigParser()
 
-# Загрузка значения из INI-файла
+# Завантажуємо значення з INI-файлу
 config_parser.read(config_file)
 
 show_hints = config_parser.getboolean('Settings', 'show_hints')
 
 
-#отображает все параметри 
+# Функція для відображення всіх параметрів конфігурації
 def show_config():
     for section in config_parser.sections():
         print(f"[{section}]")
@@ -23,26 +21,24 @@ def show_config():
             print(f"{key} = {value}")
 
 
-#отображение подсказок 
+# Функція для зміни параметра show_hints
 def change_show_hints(new_value):
     if new_value.lower() == 'true':
-        show_hints = True  # Обновление переменной show_hints внутри функции
-        config_parser.set('Settings', 'show_hints', 'True')  # Обновление значения в INI-файле
+        show_hints = True  # Оновлюємо змінну show_hints всередині функції
+        config_parser.set('Settings', 'show_hints', 'True')  # Оновлюємо значення в INI-файлі
         with open(config_file, 'w') as file:
             config_parser.write(file)
-        print("Значение show_hints успешно изменено.")
+        print("Значення show_hints успішно змінено.")
     elif new_value.lower() == 'false':
-        show_hints = False  # Обновление переменной show_hints внутри функции
-        config_parser.set('Settings', 'show_hints', 'False')  # Обновление значения в INI-файле
+        show_hints = False  # Оновлюємо змінну show_hints всередині функції
+        config_parser.set('Settings', 'show_hints', 'False')  # Оновлюємо значення в INI-файлі
         with open(config_file, 'w') as file:
             config_parser.write(file)
-        print("Значение show_hints успешно изменено.")
+        print("Значення show_hints успішно змінено.")
     else: 
-        print(f"Неверное значение  ")
+        print("Невірне значення")
 
 
-
-
-# Сохранение значения в INI-файле
+# Збереження значення в INI-файлі
 with open(config_file, 'w') as file:
     config_parser.write(file)
