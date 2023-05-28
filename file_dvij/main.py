@@ -19,49 +19,43 @@ def hints():
     print("Вийти - end \n\n\n")
 
 
-#Цикл для постійної роботи консолі 
-while True:
-    print(os.getcwd())  # Вивести поточний робочий каталог
-
-    if show_hints:
-        hints()
-
-    choice = input("Введіть команду: ")
-
-    if choice == 'ls':#ls для відображання списока файлів і папок
+#
+def processing1(command, value1, value2):
+    global show_hints
+    global del_session
+    if command == 'ls':  # ls для відображення списку файлів і папок
         list_files()
 
-    elif choice == 'mkdir':#mkdir для створення папки
-        directory_name = input("Введіть ім'я папки: ")
-        create_directory(directory_name)
+    elif command == 'mkdir':  # mkdir для створення папки
+        create_directory(value1)
 
-    elif choice == 'rmdir':#rmdir для видалення папки
-        directory_name = input("Введіть ім'я папки: ")
-        delete_directory(directory_name)
+    elif command == 'rmdir':  # rmdir для видалення папки 
+        delete_directory(value1)
 
-    elif choice == 'mv':#mv перейменування 
-        old_name = input("Введіть поточне ім'я файлу: ")
-        new_name = input("Введіть нове ім'я файлу: ")
-        rename_file(old_name, new_name)
+    elif command == 'mv':  # mv перейменування
+        rename_file(value1, value2)
 
-    elif choice == 'rm':#rm для виделення файлу
-        file_name = input("Введіть ім'я файлу: ")
-        delete_file(file_name)
+    elif command == 'rm':  # rm для видалення файлу
+        delete_file(value1)
 
-    elif choice == 'cd':#cd для зміни робочої директоріі
-        directory_path = input('Введіть ім\'я/шлях папки:')
-        change_directory(directory_path)
+    elif command == 'cd':  # cd для зміни робочої директорії
+        change_directory(value1)
 
-    elif choice == 'cat':#cat для відкриття текстових файлів
-        file_name = input("Введіть ім'я файлу: ")
-        print("\n\n\n")
-        open_file(file_name)
+    elif command == 'cat':  # cat для відкриття текстових файлів
+        open_file(value1)
 
-    elif choice == "config" or choice == "conf":#config для зміни вигляду
+
+    elif command == 'touch':#touch для створення файлу
+        touch(value1)
+    
+
+
+
+    elif command == "config" or command == "conf":  # config для зміни вигляду
         show_config()
-        name_conf = input("Введіть нову назву налаштування: ")
+        name_conf = input("\033[31mВведіть назву налаштування: \033[0m")
 
-        if name_conf == "show_hints":#Підказки
+        if name_conf == "show_hints":  # Підказки
             new_value = input("Введіть нове значення show_hints (True/False): ")
             change_show_hints(new_value)
             if new_value.lower() == 'true':
@@ -69,16 +63,56 @@ while True:
             elif new_value.lower() == 'false':
                 show_hints = False
 
-        else:
-            print(f"Параметр {name_conf} не знайдено.")
+        elif name_conf == "del_session":  # del_session
+            new_value = input("Введіть нове значення del_session (True/False): ")
+            change_del_session(new_value)
+            if new_value.lower() == 'true':
+                del_session = True
+            elif new_value.lower() == 'false':
+                del_session = False
 
-    elif choice == 'end':#end завершення сеансу
-        break
+        else:
+            print(f"\033[94mПараметр {name_conf} не знайдено. \033[0m")
+
     else:
         print("Некоректний ввід. Спробуйте знову.")
 
 
+
+
+
+#костиль для корекного відтворення кольорів 
+print("\033[94m\033[0m")
+os.system('cls' if os.name == 'nt' else 'clear')
+
+#Цикл для постійної роботи консолі 
+while True:
+
+
+    if show_hints:
+        hints()
+
+    choice = input(f"\033[94m{os.getcwd()} >>> \033[0m")
+
     
-    #Оновлює консоль
-    input("Натисніть Enter для продовження...")
-    os.system('cls' if os.name == 'nt' else 'clear')  # Очистка экрана терминала
+    if len(choice.split()) >= 4 :
+        ptint("Некоректний ввід. Спробуйте знову.")
+    else :
+        command = choice.split()[0] if choice else None
+        value1 = choice.split()[1] if len(choice.split()) > 1 else None
+        value2 = choice.split()[2] if len(choice.split()) > 2 else None
+        if command and command != 'end': 
+            processing1(command, value1, value2)
+        elif command == 'end':  # end завершення сеансу
+            break
+        else:
+            print("Некоректний ввід. Спробуйте знову.")
+
+    
+
+
+    
+    #Обновлює консоль
+    if del_session:
+        input("Нтисніть Enter для продовження...")
+        os.system('cls' if os.name == 'nt' else 'clear')  # Очистка экрана терминала
